@@ -1,5 +1,5 @@
 {
-  "name": "graphql-lattice",
+  "name": "@nyteshade/lattice-legacy",
   "version": "2.13.4",
   "description": "OO Underpinnings for ease of GraphQL Implementation",
   "main": "dist/lattice.js",
