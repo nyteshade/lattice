@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+const woof = require('woof')
+
+const cli = woof(`
+  Usage
+    $ lattice <input>
+
+  Commands:
+    init                    Initializes an example directory structure
+                            and creates a middleware script for ease
+    type, t                 Creates a new GraphQL Lattice type class
+    enum, e                 Creates a new GraphQL Enum class
+    interface, i            Creates a new GraphQL Interface class
+    union, u                Creates a new GraphQL Union class
+    scalar, s               Creates a new GraphQL Scalar class
+
+  Options
+    --force, -f             Force initialization of lattice
+    --types-dir, -d <name>  Sets the directory name for graphql types
+                            to a value of your choosing rather than
+                            the the default of 'graphql'
+
+`, {
+  commands: {
+    init: { },
+    type: { alias: 't' },
+    'enum': { alias: 'e' },
+    'interface': { alias: 'i' },
+    union: { alias: 'u' },
+    scalar: { alias: 's' }
+  },
+  flags: {
+    force: {
+      type: 'boolean',
+      alias: 'f'
+    },
+    'types-dir': {
+      type: 'string',
+      alias: 'd',
+      default: 'graphql'
+    }
+  }
+});
+
+console.log(cli);

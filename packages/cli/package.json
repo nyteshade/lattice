@@ -1,0 +1,23 @@
+{
+  "name": "@nyteshade/lattice-cli",
+  "version": "3.0.0",
+  "description": "GraphQL Lattice CLI utilities",
+  "main": "bin/lattice",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "graphql",
+    "graphql-lattice",
+    "lattice"
+  ],
+  "author": "Brielle Harrison",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-jest": "^22.1.0",
+    "jest": "^22.1.4"
+  },
+  "dependencies": {
+    "woof": "^0.2.1"
+  }
+}

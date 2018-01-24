@@ -1,0 +1,20 @@
+{
+  "presets": [
+    "stage-1",
+    "flow",
+    "node8",
+    ["env", {
+      "targets": { "node": "current" },
+      "modules": "commonjs",
+      "useBuiltIns": true,
+      "debug": true
+    }]
+  ],
+  "plugins": [
+    "transform-runtime",
+    "transform-class-properties",
+    "transform-regenerator",
+    "transform-modern-regexp"
+  ],
+  "sourceMaps": "inline"
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@nyteshade/lattice-core",
+  "version": "3.0.0",
+  "description": "Base functionality for GraphQL Lattice 3",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "rm -rf dist/* ; babel -s --source-root src src/ -d dist/"
+  },
+  "keywords": [
+    "graphql",
+    "lattice"
+  ],
+  "author": "Brielle Harrison",
+  "license": "MIT",
+  "dependencies": {
+    "graphql": "^0.12.3",
+    "lodash": "^4.17.4",
+    "ne-tag-fns": "^0.3.0",
+    "read-pkg-up": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^22.1.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-stage-1": "^6.24.1",
+    "flow-cli": "0.0.0-pre",
+    "jest": "^22.1.1"
+  }
+}
