@@ -51,7 +51,8 @@ export function factory(configs) {
           [mutationType, 'mutations'],
           [subscriptionType, 'subscriptions']
       ]) {
-        if (!execType || !map[type.name][configKey]) continue;
+        if (!execType || !map[type.name] || !map[type.name][configKey])
+          continue;
 
         for (let field of Object.keys(map[type.name][configKey])) {
           let fn = map[type.name][configKey][field]

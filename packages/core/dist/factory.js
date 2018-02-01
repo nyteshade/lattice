@@ -59,7 +59,7 @@ function factory(configs) {
       }
 
       for (let [execType, configKey] of [[queryType, 'queries'], [mutationType, 'mutations'], [subscriptionType, 'subscriptions']]) {
-        if (!execType || !map[type.name][configKey]) continue;
+        if (!execType || !map[type.name] || !map[type.name][configKey]) continue;
 
         for (let field of (0, _keys2.default)(map[type.name][configKey])) {
           let fn = map[type.name][configKey][field];
