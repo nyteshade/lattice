@@ -3,9 +3,10 @@
 let repl = require('repl')
 let { merge } = require('lodash')
 let { graphql, parse, print, buildASTSchema } = require('graphql')
-let { factory, SyntaxTree } = require('.')
+let { factory, SyntaxTree, ModuleParser } = require('.')
 
 let db = new Map()
+let mp = new ModuleParser('./test')
 
 db.set('Brielle', {
   name: 'Brielle',
@@ -82,6 +83,7 @@ let st2 = SyntaxTree.from('enum Gender { TransFeminine }')
 let context = merge(global, {
   factory, merge, SyntaxTree, db, config, st, st2,
   graphql, buildASTSchema, parse, print, global,
+  mp, ModuleParser,
   gqlctx: (schema, source, context = {}) => {
     graphql(schema, source, undefined, context).
       then(o => {global.rc = o; console.log(o) })

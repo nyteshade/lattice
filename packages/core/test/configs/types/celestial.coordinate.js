@@ -1,6 +1,7 @@
-import { dedent as gql } from 'ne-tag-fns'
+const { dedent } = require('ne-tag-fns')
+const gql = dedent
 
-export celestialCoordinate = {
+let celestialCoordinate = {
   name: 'CelestialCoordinate',
   schema: gql`
     type CelestialCoordinate {
@@ -12,4 +13,7 @@ export celestialCoordinate = {
   `
 }
 
-export default celestialCoordinate
+module.exports = {
+  celestialCoordinate,
+  default: celestialCoordinate
+}

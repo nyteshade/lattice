@@ -1,6 +1,7 @@
-import { dedent as gql } from 'ne-tag-fns'
+const { dedent } = require('ne-tag-fns')
+const gql = dedent
 
-export celestialAscension = {
+let celestialAscension = {
   name: 'CelestialAscension',
   schema: gql`
     """
@@ -21,4 +22,7 @@ export celestialAscension = {
   `
 }
 
-export default celestialAscension
+module.exports = {
+  celestialAscension,
+  default: celestialAscension
+}
