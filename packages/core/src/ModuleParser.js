@@ -84,6 +84,14 @@ export class ModuleParser {
   directory: string;
 
   /**
+   * A map of which file contained which imports
+   *
+   * @memberof ModuleParser
+   * @type {Map<string, Array<LatticeConfig>>}
+   */
+  directories: Map<string, Array<LatticeConfig>>;
+
+  /**
    * A boolean value denoting whether or not the `ModuleParser` instance is
    * valid; i.e. the directory it points to actually exists and is a directory
    *
@@ -117,6 +125,7 @@ export class ModuleParser {
     options: ModuleParserConfig = {addLatticeTypes: true}
   ) {
     this.directory = path.resolve(directory);
+    this.directories = new Map();
     this.configs = [];
     this.skipped = new Map();
 
@@ -245,13 +254,16 @@ export class ModuleParser {
 
     // @ComputedType
     files = await this.constructor.walk(this.directory)
-    modules = files.map(file => this.importConfigs(file))
-
-    // @ComputedType
-    (modules
-      .map(mod => this.findLatticeConfigs(mod))
-      .reduce((last, cur) => (last || []).concat(cur || []), [])
-      .forEach(config => set.add(config)))
+    files
+      .map(file => {
+        this.directories.set(
+          file,
+          Array.from(this.findLatticeConfigs(this.importConfigs(file)))
+        )
+        return this.directories.get(file)
+      })
+      .reduce((last, cur) => last.concat(cur), [])
+      .forEach(config => set.add(config))
 
     // Convert the set back into an array
     this.configs = Array.from(set);
@@ -288,7 +300,7 @@ export class ModuleParser {
    * array if none could be identified.
    */
   parseSync(): Array<GQLBase> {
-    let modules: Array<Object>;
+    let modules: mixed;
     let files: Array<string>;
     let set = new Set();
     let opts = getLatticePrefs()
@@ -304,13 +316,15 @@ export class ModuleParser {
     this.skipped.clear()
 
     files = this.constructor.walkSync(this.directory)
-    modules = files.map(file => {
-      return this.importConfigs(file)
-    })
-
-    modules
-      .map(mod => this.findLatticeConfigs(mod))
-      .reduce((last, cur) => (last || []).concat(cur || []), [])
+    files
+      .map(file => {
+        this.directories.set(
+          file,
+          Array.from(this.findLatticeConfigs(this.importConfigs(file)))
+        )
+        return this.directories.get(file)
+      })
+      .reduce((last, cur) => last.concat(cur), [])
       .forEach(config => set.add(config))
 
     // Convert the set back into an array

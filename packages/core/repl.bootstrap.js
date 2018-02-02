@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node -r source-map-support/register
 
 let repl = require('repl')
 let { merge } = require('lodash')

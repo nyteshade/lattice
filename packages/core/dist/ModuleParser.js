@@ -90,16 +90,19 @@ class ModuleParser {
 
 
   /**
-   * A map of skipped items on the last pass and the associated error that
-   * accompanies it.
-   */
-
-  /**
-   * An internal array of `LatticeConfig` extended classes found during
-   * either a `parse()` or `parseSync()` call.
+   * A string denoting the directory on disk where `ModuleParser` should be
+   * searching for its classes.
    *
    * @memberof ModuleParser
-   * @type {Array<LatticeConfig>}
+   * @type {string}
+   */
+
+
+  /**
+   * An array of strings holding loose GraphQL schema documents.
+   *
+   * @memberof ModuleParser
+   * @type {Array<string>}
    */
   constructor(directory, options = { addLatticeTypes: true }) {
     Object.defineProperty(this, 'looseGraphQL', {
@@ -114,6 +117,7 @@ class ModuleParser {
     });
 
     this.directory = _path2.default.resolve(directory);
+    this.directories = new _map2.default();
     this.configs = [];
     this.skipped = new _map2.default();
 
@@ -152,19 +156,24 @@ class ModuleParser {
 
 
   /**
-   * A string denoting the directory on disk where `ModuleParser` should be
-   * searching for its classes.
+   * A map of which file contained which imports
    *
    * @memberof ModuleParser
-   * @type {string}
+   * @type {Map<string, Array<LatticeConfig>>}
    */
 
 
   /**
-   * An array of strings holding loose GraphQL schema documents.
+   * A map of skipped items on the last pass and the associated error that
+   * accompanies it.
+   */
+
+  /**
+   * An internal array of `LatticeConfig` extended classes found during
+   * either a `parse()` or `parseSync()` call.
    *
    * @memberof ModuleParser
-   * @type {Array<string>}
+   * @type {Array<LatticeConfig>}
    */
   importConfigs(filePath) {
     let moduleContents = {};
@@ -262,10 +271,10 @@ class ModuleParser {
 
     // @ComputedType
     files = await this.constructor.walk(this.directory);
-    modules = files.map(file => this.importConfigs(file))
-
-    // @ComputedType
-    (modules.map(mod => this.findLatticeConfigs(mod)).reduce((last, cur) => (last || []).concat(cur || []), []).forEach(config => set.add(config)));
+    files.map(file => {
+      this.directories.set(file, (0, _from2.default)(this.findLatticeConfigs(this.importConfigs(file))));
+      return this.directories.get(file);
+    }).reduce((last, cur) => last.concat(cur), []).forEach(config => set.add(config));
 
     // Convert the set back into an array
     this.configs = (0, _from2.default)(set);
@@ -318,11 +327,10 @@ class ModuleParser {
     this.skipped.clear();
 
     files = this.constructor.walkSync(this.directory);
-    modules = files.map(file => {
-      return this.importConfigs(file);
-    });
-
-    modules.map(mod => this.findLatticeConfigs(mod)).reduce((last, cur) => (last || []).concat(cur || []), []).forEach(config => set.add(config));
+    files.map(file => {
+      this.directories.set(file, (0, _from2.default)(this.findLatticeConfigs(this.importConfigs(file))));
+      return this.directories.get(file);
+    }).reduce((last, cur) => last.concat(cur), []).forEach(config => set.add(config));
 
     // Convert the set back into an array
     this.configs = (0, _from2.default)(set);
