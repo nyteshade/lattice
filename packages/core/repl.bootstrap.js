@@ -80,10 +80,13 @@ let config = {
 let st = SyntaxTree.from(config.schema)
 let st2 = SyntaxTree.from('enum Gender { TransFeminine }')
 
+let configs = mp.parseSync()
+let schema = factory([config].concat(configs))
+
 let context = merge(global, {
   factory, merge, SyntaxTree, db, config, st, st2,
   graphql, buildASTSchema, parse, print, global,
-  mp, ModuleParser,
+  mp, ModuleParser, configs, schema,
   gqlctx: (schema, source, context = {}) => {
     graphql(schema, source, undefined, context).
       then(o => {global.rc = o; console.log(o) })
@@ -95,22 +98,27 @@ console.log(`
 Welcome to the graphql-lattice/core repl bootstrapping process, the
 following objects are in scope for you to use
 
-  config     - a config with a query, mutation, type and enums
-               as well as functions to manage the executable types
-  db         - a map that serves as the database for the config
-  merge      - lodash's merge
-  SyntaxTree - graphql-lattice/core's SyntaxTree
-  factory    - the new core method for graphql-lattice/core
-  st         - an instance of SyntaxTree.from(config.schema)
+  config       - a config with a query, mutation, type and enums
+                 as well as functions to manage the executable types
+  configs      - an array of config objects parsed using ModuleParser
+                 .parseSync()
+  schema       - a schema created using factory([config].concat(configs))
+  db           - a map that serves as the database for the config
+  mp           - instance of ModuleParser pointed to './test'
+  merge        - lodash's merge
+  SyntaxTree   - graphql-lattice/core's SyntaxTree
+  ModuleParser
+  factory      - the new core method for graphql-lattice/core
+  st           - an instance of SyntaxTree.from(config.schema)
 
-  graphql    - for executing source against a schema
-  parse      - for generating DocumentNodes from SDL
-  print      - for reverting DocumentNodes to SDL
-  gqlctx     - a custom function that takes your schema, source and an
-               optional context object and does the following with a
-               schema:
-                 graphql(schema,source,undefined,context||{})
-                   .then(o => {global.rc = o; console.log(o)})
+  graphql      - for executing source against a schema
+  parse        - for generating DocumentNodes from SDL
+  print        - for reverting DocumentNodes to SDL
+  gqlctx       - a custom function that takes your schema, source and an
+                 optional context object and does the following with a
+                 schema:
+                   graphql(schema,source,undefined,context||{})
+                     .then(o => {global.rc = o; console.log(o)})
 `)
 }})
 
