@@ -3,10 +3,10 @@
 let repl = require('repl')
 let { merge } = require('lodash')
 let { graphql, parse, print, buildASTSchema } = require('graphql')
-let { factory, SyntaxTree, ModuleParser } = require('.')
+let { factory, SyntaxTree, ConfigParser } = require('.')
 
 let db = new Map()
-let mp = new ModuleParser('./test')
+let cp = new ConfigParser('./test')
 
 db.set('Brielle', {
   name: 'Brielle',
@@ -80,13 +80,13 @@ let config = {
 let st = SyntaxTree.from(config.schema)
 let st2 = SyntaxTree.from('enum Gender { TransFeminine }')
 
-let configs = mp.parseSync()
+let configs = cp.parseSync()
 let schema = factory([config].concat(configs))
 
 let context = merge(global, {
   factory, merge, SyntaxTree, db, config, st, st2,
   graphql, buildASTSchema, parse, print, global,
-  mp, ModuleParser, configs, schema,
+  mp, ConfigParser, configs, schema,
   gqlctx: (schema, source, context = {}) => {
     graphql(schema, source, undefined, context).
       then(o => {global.rc = o; console.log(o) })
@@ -107,7 +107,7 @@ following objects are in scope for you to use
   mp           - instance of ModuleParser pointed to './test'
   merge        - lodash's merge
   SyntaxTree   - graphql-lattice/core's SyntaxTree
-  ModuleParser
+  ConfigParser - reads a directory tree and read various js configs
   factory      - the new core method for graphql-lattice/core
   st           - an instance of SyntaxTree.from(config.schema)
 

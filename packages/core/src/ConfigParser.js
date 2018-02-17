@@ -2,7 +2,7 @@
 
 import fs, { readdirSync, statSync } from 'fs'
 import path from 'path'
-import * as types from './types'
+import * as types from 'ne-types'
 import { merge } from 'lodash'
 import {
   promisify,
@@ -38,24 +38,24 @@ const {
   extendsFrom
 } = types;
 
-type ModuleParserConfig = {
+type ConfigParserConfig = {
   addLatticeTypes?: boolean
 }
 
 /**
- * The ModuleParser is a utility class designed to loop through and iterate
+ * The ConfigParser is a utility class designed to loop through and iterate
  * on a directory and pull out of each .js file found, any configs or exports
  * that are of LatticeConfig type.
  *
- * @class ModuleParser
+ * @class ConfigParser
  * @since 3.0.0
  */
-export class ModuleParser {
+export class ConfigParser {
   /**
    * An internal array of `LatticeConfig` extended classes found during
    * either a `parse()` or `parseSync()` call.
    *
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    * @type {Array<LatticeConfig>}
    */
   configs: Array<LatticeConfig>;
@@ -63,7 +63,7 @@ export class ModuleParser {
   /**
    * An array of strings holding loose GraphQL schema documents.
    *
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    * @type {Array<string>}
    */
   looseGraphQL: Array<string> = [];
@@ -75,10 +75,10 @@ export class ModuleParser {
   skipped: Map<string, Error>;
 
   /**
-   * A string denoting the directory on disk where `ModuleParser` should be
+   * A string denoting the directory on disk where `ConfigParser` should be
    * searching for its classes.
    *
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    * @type {string}
    */
   directory: string;
@@ -86,13 +86,13 @@ export class ModuleParser {
   /**
    * A map of which file contained which imports
    *
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    * @type {Map<string, Array<LatticeConfig>>}
    */
   directories: Map<string, Array<LatticeConfig>>;
 
   /**
-   * A boolean value denoting whether or not the `ModuleParser` instance is
+   * A boolean value denoting whether or not the `ConfigParser` instance is
    * valid; i.e. the directory it points to actually exists and is a directory
    *
    * @type {boolean}
@@ -101,7 +101,7 @@ export class ModuleParser {
 
   /**
    * An object, optionally added during construction, that specifies some
-   * configuration about the ModuleParser and how it should do its job.
+   * configuration about the ConfigParser and how it should do its job.
    *
    * Initially, the
    *
@@ -114,7 +114,7 @@ export class ModuleParser {
    *
    * @constructor
    * @method ⎆⠀constructor
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    * @inner
    *
    * @param {string} directory a string path to a directory containing the
@@ -122,7 +122,7 @@ export class ModuleParser {
    */
   constructor(
     directory: string,
-    options: ModuleParserConfig = {addLatticeTypes: true}
+    options: ConfigParserConfig = {addLatticeTypes: true}
   ) {
     this.directory = path.resolve(directory);
     this.directories = new Map();
@@ -144,7 +144,7 @@ export class ModuleParser {
    * file in question and return the object it exported; whatever that
    * may be.
    *
-   * @method ModuleParser#⌾⠀importConfigs
+   * @method ConfigParser#⌾⠀importConfigs
    * @since 3.0.0
    *
    * @param {string} filePath a path to pass to `require()`
@@ -175,7 +175,7 @@ export class ModuleParser {
    * exports. Continually, and recursively, build this list of classes out
    * so that we can add them to a `GQLExpressMiddleware`.
    *
-   * @method ModuleParser#⌾⠀findLatticeConfigs
+   * @method ConfigParser#⌾⠀findLatticeConfigs
    * @since 3.0.0
    *
    * @param {Object} contents the object to parse for properties extending
@@ -224,12 +224,12 @@ export class ModuleParser {
   }
 
   /**
-   * This method takes a instance of ModuleParser, initialized with a directory,
+   * This method takes a instance of ConfigParser, initialized with a directory,
    * and walks its contents, importing files as they are found, and sorting
    * any exports that extend from GQLBase into an array of such classes
    * in a resolved promise.
    *
-   * @method ModuleParser#⌾⠀parse
+   * @method ConfigParser#⌾⠀parse
    * @async
    * @since 2.7.0
    *
@@ -244,7 +244,7 @@ export class ModuleParser {
 
     if (!this.valid) {
       throw new Error(`
-        ModuleParser instance is invalid for use with ${this.directory}.
+        ConfigParser instance is invalid for use with ${this.directory}.
         The path is either a non-existent path or it does not represent a
         directory.
       `)
@@ -279,7 +279,7 @@ export class ModuleParser {
     // Stop flow and throw an error if some files failed to load and settings
     // declare we should do so. After Lattice 3.x we should expect this to be
     // the new default
-    if (opts.ModuleParser.failOnError && this.skipped.size) {
+    if (opts.ConfigParser.failOnError && this.skipped.size) {
       this.printSkipped()
       throw new Error('Some files skipped due to errors')
     }
@@ -288,11 +288,11 @@ export class ModuleParser {
   }
 
   /**
-   * This method takes a instance of ModuleParser, initialized with a directory,
+   * This method takes a instance of ConfigParser, initialized with a directory,
    * and walks its contents, importing files as they are found, and sorting
    * any exports that extend from GQLBase into an array of such classes
    *
-   * @method ModuleParser#⌾⠀parseSync
+   * @method ConfigParser#⌾⠀parseSync
    * @async
    * @since 2.7.0
    *
@@ -307,7 +307,7 @@ export class ModuleParser {
 
     if (!this.valid) {
       throw new Error(`
-        ModuleParser instance is invalid for use with ${this.directory}.
+        ConfigParser instance is invalid for use with ${this.directory}.
         The path is either a non-existent path or it does not represent a
         directory.
       `)
@@ -341,7 +341,7 @@ export class ModuleParser {
     // Stop flow and throw an error if some files failed to load and settings
     // declare we should do so. After Lattice 3.x we should expect this to be
     // the new default
-    if (opts.ModuleParser.failOnError && this.skipped.size) {
+    if (opts.ConfigParser.failOnError && this.skipped.size) {
       this.printSkipped()
       throw new Error('Some files skipped due to errors')
     }
@@ -377,7 +377,7 @@ export class ModuleParser {
    * value will be `[object MyClass]`, given an instance of `MyClass`
    *
    * @method ⌾⠀[Symbol.toStringTag]
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    *
    * @return {string} the name of the class this is an instance of
    * @ComputedType
@@ -390,7 +390,7 @@ export class ModuleParser {
    * the result would be `[object MyClass]`.
    *
    * @method ⌾⠀[Symbol.toStringTag]
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    * @static
    *
    * @return {string} the name of this class
@@ -402,7 +402,7 @@ export class ModuleParser {
    * Recursively walks a directory and returns an array of asbolute file paths
    * to the files under the specified directory.
    *
-   * @method ModuleParser~⌾⠀walk
+   * @method ConfigParser~⌾⠀walk
    * @async
    * @since 2.7.0
    *
@@ -418,8 +418,8 @@ export class ModuleParser {
     extensions: Array<string> = ['.js', '.jsx', '.ts', '.tsx']
   ): Promise<Array<string>> {
     let files = await readdirAsync(dir);
-    let exts = ModuleParser.checkForPackageExtensions() || extensions
-    let pattern = ModuleParser.arrayToPattern(exts)
+    let exts = ConfigParser.checkForPackageExtensions() || extensions
+    let pattern = ConfigParser.arrayToPattern(exts)
     let stats
 
     files = files.map(file => path.resolve(path.join(dir, file)))
@@ -443,7 +443,7 @@ export class ModuleParser {
    * to the files under the specified directory. This version does this in a
    * synchronous fashion.
    *
-   * @method ModuleParser~⌾⠀walkSync
+   * @method ConfigParser~⌾⠀walkSync
    * @async
    * @since 2.7.0
    *
@@ -459,8 +459,8 @@ export class ModuleParser {
     extensions: Array<string> = ['.js', '.jsx', '.ts', '.tsx']
   ): Array<string> {
     let files = readdirSync(dir)
-    let exts = ModuleParser.checkForPackageExtensions() || extensions
-    let pattern = ModuleParser.arrayToPattern(exts)
+    let exts = ConfigParser.checkForPackageExtensions() || extensions
+    let pattern = ConfigParser.arrayToPattern(exts)
     let stats
 
     files = files.map(file => path.resolve(path.join(dir, file)))
@@ -480,7 +480,7 @@ export class ModuleParser {
   }
 
   /**
-   * The ModuleParser should only parse files that match the default or
+   * The ConfigParser should only parse files that match the default or
    * supplied file extensions. The default list contains .js, .jsx, .ts
    * and .tsx; so JavaScript or TypeScript files and their JSX React
    * counterparts
@@ -490,7 +490,7 @@ export class ModuleParser {
    * creating a constant expression to use instead.
    *
    * @static
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    * @function ⌾⠀arrayToPattern
    * @since 2.13.0
    *
@@ -524,7 +524,7 @@ export class ModuleParser {
    * Array values found; this behavior is the default
    *
    * @static
-   * @memberof ModuleParser
+   * @memberof ConfigParser
    * @method ⌾⠀checkForPackageExtensions
    * @since 2.13.0
    *
@@ -532,7 +532,7 @@ export class ModuleParser {
    * their `.toString()` method invoked before being wrapped in an Array;
    * defaults to true
    * @return {?Array<string>} null if no value is set for the property
-   * `lattice.ModuleParser.extensions` in `package.json` or the value
+   * `lattice.ConfigParser.extensions` in `package.json` or the value
    * of the setting if it is an array. Finally if the value is set but is
    * not an array, the specified value wrapped in an array is returned
    */
@@ -540,8 +540,8 @@ export class ModuleParser {
     let pkg = getLatticePrefs()
     let extensions = null
 
-    if (pkg.ModuleParser && pkg.ModuleParser.extensions) {
-      let packageExts = pkg.ModuleParser.extensions
+    if (pkg.ConfigParser && pkg.ConfigParser.extensions) {
+      let packageExts = pkg.ConfigParser.extensions
 
       if (Array.isArray(packageExts)) {
         extensions = packageExts
@@ -555,4 +555,4 @@ export class ModuleParser {
   }
 }
 
-export default ModuleParser;
+export default ConfigParser;

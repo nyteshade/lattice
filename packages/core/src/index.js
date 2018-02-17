@@ -1,5 +1,5 @@
 import { factory } from './factory'
-import { ModuleParser } from './ModuleParser'
+import { ConfigParser } from './ConfigParser'
 import { SyntaxTree } from './SyntaxTree'
 import {
   implementsLatticeSDLConfig,
@@ -9,14 +9,14 @@ import {
   isScalarConfig,
   representsType
 } from './language'
-import types, { typeOf } from './types'
+import types, { typeOf } from 'ne-types'
 
 // TODO refactor utils.js
 import { LatticeLogs } from './utils'
 
 export {
   LatticeLogs,
-  ModuleParser,
+  ConfigParser,
   SyntaxTree,
   factory,
   implementsLatticeSDLConfig,
