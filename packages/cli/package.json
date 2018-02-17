@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "GraphQL Lattice CLI utilities",
   "main": "bin/lattice",
+  "private": true,
   "scripts": {
     "test": "jest"
   },
