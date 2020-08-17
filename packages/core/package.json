@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "graphql": "^0.12.3",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.20",
     "marked": "^0.3.12",
     "ne-tag-fns": "^0.3.0",
     "ne-types": "^1.0.0",
